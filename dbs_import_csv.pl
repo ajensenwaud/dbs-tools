@@ -10,6 +10,7 @@ use Text::CSV::Slurp;
 
 my $csv = Text::CSV->new({ sep_char => ',' });
 my $file = $ARGV[0] or die "Need to get CSV file on the command line.\n";
+my $file_out = $ARGV[1] or die "Need to specify output file on the commmand line.\n";
 
 sub trim
 {
@@ -79,7 +80,7 @@ while (my $line = <$data>) {
 
 print Dumper(@out2);
 
-open my $fh, ">:encoding(utf8)", "new.csv" or die "new.csv: $!"; 
+open my $fh, ">:encoding(utf8)", $file_out or die "new.csv: $!"; 
 my $csvo  = Text::CSV->new({binary => 1, auto_diag => 1});
 for my $e (@out2) { 
 	$csvo->say($fh, \@$e);
