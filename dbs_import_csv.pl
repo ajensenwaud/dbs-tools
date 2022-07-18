@@ -12,6 +12,7 @@ my $csv = Text::CSV->new({ sep_char => ',' });
 my $file = $ARGV[0] or die "Need to get CSV file on the command line.\n";
 my $file_out = $ARGV[1] or die "Need to specify output file on the commmand line.\n";
 
+# Trim a string nicely
 sub trim
 {
 	my $string = shift;
@@ -20,9 +21,35 @@ sub trim
 	return $string;
 }
 
+# Convert one line of DBS CSV format to an array
+sub line_to_arr
+{
+	my ($fields, $ccy) = @_; 	
+	my $txndate = DateTime->from_epoch(
+		epoch => str2time(trim($fields->[0])." 00:00:00"),
+		time_zone => 'Asia/Singapore'
+	);
+	my $debitAmount = length(trim $fields->[4]) > 0 ? trim($fields->[4]) + 0.0  : 0.0;
+	my $creditAmount = length(trim $fields->[5]) > 0 ? trim($fields->[5]) + 0.0 : 0.0;
+	my $txnDateStr = $txndate->strftime("%Y-%m-%d");
+	my $statementCode = 	trim($fields->[2]);
+	my $reference = 	trim($fields->[3]); 
+	my $debit = 		$debitAmount,
+	my $credit = 		$creditAmount,
+	my $text = 		trim($fields->[6].$fields->[7].$fields->[8]);
+	my @line = ( 
+		$txnDateStr, 
+		$ccy, 
+		$statementCode,
+		$reference, 
+		$debit, 
+		$credit, 
+		$text);
+	return @line;
+}
+
 open (my $data, '<', $file) or die "Could not open '$file' $!\n";
-my @out = (); 
-my @out2 = ();
+my @outcsv = ();
 my $ccy = "SGD";
 my $reached_csv = 0; # is true if we reached where the good stuff is (= skip headers)
 while (my $line = <$data>) { 
@@ -37,40 +64,8 @@ while (my $line = <$data>) {
 			print "I reached the Transsaction date line!\n";
 			$reached_csv = 1;
 		} elsif ($reached_csv && length($fields[0]) > 0) { 
-			#	print Dumper(\@fields);
-			my %elem = ( 
-				'TxnDateRaw' 		=> trim($fields[0]),
-				'TxnDate' 		=> str2time(trim($fields[0])." 00:00:00"),
-				'Currency'		=> $ccy,
-				'StatementCode' 	=> trim($fields[2]), 
-				'Reference' 		=> trim($fields[3]),
-				'DebitAmount' 		=> trim($fields[4]) + 0.0,
-				'CreditAmount' 		=> trim($fields[5]) + 0.0, 
-				'ClientReference' 	=> trim($fields[6]),
-				'AdditionalReference' 	=> trim($fields[7]),
-				'Misc Reference'	=> trim($fields[8])
-			);
-			my $txndate = DateTime->from_epoch(
-				epoch => $elem{'TxnDate'}, 
-				time_zone => 'Asia/Singapore'
-			);
-			my @elem2 = ( 
-				#trim($fields[0]),
-				#$txndate->year()."-".$txndate->month()."-".$txndate->day(),
-				$txndate->strftime("%Y-%m-%d"),
-				$ccy,
-				trim($fields[2]), 
-				trim($fields[3]),
-				trim($fields[4]) + 0.0,
-				trim($fields[5]) + 0.0, 
-				trim($fields[6]),
-				trim($fields[7]),
-				trim($fields[8])
-			);
-			if ($elem{'TxnDate'}) {
-				push @out, \%elem;
-				push @out2, \@elem2;
-			}
+			my @elem = line_to_arr(\@fields, $ccy);
+			push @outcsv, \@elem;
 		}
 	}
 	else { 
@@ -78,15 +73,10 @@ while (my $line = <$data>) {
 	}
 }
 
-print Dumper(@out2);
-
 open my $fh, ">:encoding(utf8)", $file_out or die "new.csv: $!"; 
 my $csvo  = Text::CSV->new({binary => 1, auto_diag => 1});
-for my $e (@out2) { 
+for my $e (@outcsv) { 
 	$csvo->say($fh, \@$e);
 }
 close $fh or die "new.csv: $!";
-#for %e in @out
-#$csvo->say($fh, $_) for @out;
-#close $fh or die "new csv: $!";
 
