@@ -7,6 +7,14 @@ use Data::Dumper;
 use Date::Parse;
 use DateTime;
 use Text::CSV::Slurp;
+use Log::Log4perl qw(:easy);
+
+# Set debugging level. Change to $DEBUG if you need to debug stuff
+Log::Log4perl->easy_init( 
+	$DEBUG
+	#{ file => "STDERR", level => $DEBUG}, 
+	#{ file => "STDERR", level => $ERROR } 
+);
 
 my $csv = Text::CSV->new({ sep_char => ',' });
 my $file = $ARGV[0] or die "Need to get CSV file on the command line.\n";
@@ -21,6 +29,17 @@ sub trim
 	return $string;
 }
 
+sub usage
+{
+	return "Usage: dbs_import_csv.pl <input CSV file> <output CSV file>\n"
+}
+
+sub usage_and_die
+{
+	my $error = shift;
+	die $error." ".usage();
+}
+	
 # Convert one line of DBS CSV format to an array
 sub line_to_arr
 {
@@ -45,6 +64,7 @@ sub line_to_arr
 		$debit, 
 		$credit, 
 		$text);
+	DEBUG("Transformed line into array with data: { txnDateStr = '$txnDateStr', ccy = '$ccy', statementCode = '$statementCode', reference = '$reference', debit = '$debit', credit = '$credit', text = '$text' }");
 	return @line;
 }
 
@@ -58,25 +78,27 @@ while (my $line = <$data>) {
 		my @fields = $csv->fields(); 
 		if ($fields[0] eq 'Currency:') { 
 			$ccy = trim((split(' ', $fields[1]))[0]);
-			print "$fields[1], Setting curency = $ccy\n";
+			DEBUG( "Setting curency = $ccy" );
 		}
 		if ($fields[0] eq 'Transaction Date') { 
-			print "I reached the Transsaction date line!\n";
+			DEBUG("I reached the Transsaction date line!");
 			$reached_csv = 1;
 		} elsif ($reached_csv && length($fields[0]) > 0) { 
+			DEBUG("Parsing line $line");
 			my @elem = line_to_arr(\@fields, $ccy);
 			push @outcsv, \@elem;
+			#DEBUG("Line parsed into: ".Dumper(@elem));
 		}
 	}
 	else { 
-		warn "Line could not be parsed: $line\n";
+		ERROR("Line could not be parsed: $line\n");
 	}
 }
 
-open my $fh, ">:encoding(utf8)", $file_out or die "new.csv: $!"; 
+open my $fh, ">:encoding(utf8)", $file_out or usage_and_die($!); # die "Usage:  $!"; 
 my $csvo  = Text::CSV->new({binary => 1, auto_diag => 1});
 for my $e (@outcsv) { 
 	$csvo->say($fh, \@$e);
 }
-close $fh or die "new.csv: $!";
+close $fh or die "new.csv: $!\n".usage();
 
