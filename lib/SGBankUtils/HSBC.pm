@@ -17,6 +17,8 @@ sub line_to_arr
 	my ($fields, $ccy) = @_; 
 	my $text = trim($fields->[1]);
 	$fields->[2] =~ s/\,//g;
+	# $fields->[0] =~ s/\//\-/g;
+	my ($day, $month, $year) = split("/", $fields->[0]);
 	my $amount = length(trim $fields->[2]) > 0 ? trim($fields->[2]) + 0.0 : 0.0;
 	my $credit = 0.0; 
 	my $debit = 0.0;
@@ -27,7 +29,7 @@ sub line_to_arr
 		$debit = -($amount);
 	}
 	return ( 
-		$fields->[0],
+		"$year-$month-$day",
 		$text,
 		$debit, 
 		$credit,
