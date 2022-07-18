@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+use strict; 
+use warnings; 
+
+use Text::CSV; 
+use Data::Dumper;
+use Date::Parse;
+use DateTime;
+use Text::CSV::Slurp;
+use lib "lib/";
+use SGBankUtils::Util qw(trim usage usage_and_die write_array_to_csv_file);
+use SGBankUtils::DBS qw(traverse_and_construct);
+use Log::Log4perl qw(:easy);
+
+# Set debugging level. Change to $DEBUG if you need to debug stuff
+# See ttps://metacpan.org/pod/Log::Log4perl for more information
+Log::Log4perl->easy_init( 
+	# Change below to $DEBUG for debug-friendly logging
+	$INFO # $ERROR # , $DEBUG
+	# Change below for outputting to various files instead of STDOUT, STDERR
+	#{ file => "STDERR", level => $DEBUG}, 
+	#{ file => "STDERR", level => $ERROR } 
+);
+
+my $file = $ARGV[0] or die "Need to get CSV file on the command line.\n";
+my $file_out = $ARGV[1] or die "Need to specify output file on the commmand line.\n";
+
+# Process DBS file format unless otherwise specific
+INFO("Parsing $file...");
+my @outcsv = SGBankUtils::DBS::traverse_and_construct($file);
+INFO("Converted into $#outcsv lines of transaction data.");
+write_array_to_csv_file($file_out, \@outcsv);
+INFO("Wrote $#outcsv lines of transaction data to $file_out");
+
+1;
