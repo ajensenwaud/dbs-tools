@@ -28,7 +28,7 @@ bin/import_bank_csv --dbs dbs-input-file.csv output.csv
 Or HSBC:
 
 ```
-bin/import_csv --hsbc hsbc-input-file.csv output.csv
+bin/import_bank_csv --hsbc hsbc-input-file.csv output.csv
 ```
 
 After running the command, you can point gnuCash at ``output.csv`` to import it following the usual process.
