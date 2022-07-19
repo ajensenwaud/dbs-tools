@@ -2,29 +2,22 @@
 use strict; 
 use warnings; 
 
-use Text::CSV; 
-use Data::Dumper;
-use Date::Parse;
-use DateTime;
 use lib "lib/";
 use SGBankUtils;
-use SGBankUtils::Util qw(usage usage_and_die write_array_to_csv_file version_and_exit run);
+use SGBankUtils::Util qw(usage_and_die version_and_exit run);
 use Log::Log4perl qw(:easy);
 
-# Main program
 # Configure logging facility
 # Change to $DEBUG for verbose output to STDOUT
 Log::Log4perl->easy_init( 
-	$INFO # $ERROR # , $DEBUG
+	$INFO # $ERROR $DEBUG
 );
 
 version_and_exit() unless $#ARGV > 0;
-# Grab command line switches
 if ($ARGV[0] eq "--version" or $ARGV[0] eq '-v') { 
 	version_and_exit();
 }
-
 my ($format, $file_in, $file_out) = @ARGV or usage_and_die("Incorrect set of command line parameters!");
 
-# Run the main program
+# Hand off to the main program
 SGBankUtils::run($format, $file_in, $file_out);
