@@ -16,6 +16,8 @@ sub trim
 	return $string;
 }
 
+our $VERSION = "0.1";
+
 sub usage
 {
 	return "Usage: dbs_import_csv.pl [--dbs|--hsbc] <input CSV file> <output CSV file>\n"
@@ -24,7 +26,7 @@ sub usage
 sub usage_and_die
 {
 	my $error = shift;
-	die $error." ".usage();
+	die $error."\n".usage();
 }
 
 sub write_array_to_csv_file

@@ -1,0 +1,6 @@
+Makefile.PL
+MANIFEST
+bin/import_bank_csv
+lib/SGBankUtils/Util.pm
+lib/SGBankUtils/DBS.pm
+lib/SGBankUtils/HSBC.pm
