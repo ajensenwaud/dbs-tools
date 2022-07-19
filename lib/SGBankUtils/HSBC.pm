@@ -29,10 +29,11 @@ sub line_to_arr
 		$debit = -($amount);
 	}
 	return ( 
-		"$year-$month-$day",
-		$text,
-		$debit, 
-		$credit,
+		date => "$year-$month-$day",
+		text => $text,
+		debit => $debit, 
+		credit => $credit,
+		currency => 'SGD' # HSBC format has no notion of currency so we just insert SGD for now
 	);
 }
 
@@ -47,8 +48,8 @@ sub traverse_and_construct
 	while (my $line = <$data>) { 
 		if ($csv->parse($line)) { 
 			my @fields = $csv->fields();
-			my @elem = line_to_arr(\@fields, "SGD"); 
-			push @outcsv, \@elem;
+			my %elem = line_to_arr(\@fields, "SGD"); 
+			push @outcsv, \%elem;
 		}
 		$counter++;
 	}	

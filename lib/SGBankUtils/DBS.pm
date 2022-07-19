@@ -19,24 +19,30 @@ sub line_to_arr
 		epoch => str2time(trim($fields->[0])." 00:00:00"),
 		time_zone => 'Asia/Singapore'
 	);
-	#my $debitAmount = length(trim $fields->[4]) > 0 ? trim($fields->[4]) + 0.0  : 0.0;
-	#my $creditAmount = length(trim $fields->[5]) > 0 ? trim($fields->[5]) + 0.0 : 0.0;
-	my $debit = $fields->[4] + 0;
-	my $credit = $fields->[5] + 0;
+	# Fix data converion issues, i.e. 
+	# Argument " " isn't numeric in addition (+)
+	my $debit = length(trim $fields->[4]) > 0 ? trim($fields->[4]) + 0.0  : 0.0;
+	my $credit = length(trim $fields->[5]) > 0 ? trim($fields->[5]) + 0.0 : 0.0;
+	
+	# Make sure DBS use a date format that GnuCash can consume - yyyy-mm-dd
 	my $txnDateStr = $txndate->strftime("%Y-%m-%d");
 	my $statementCode = 	trim($fields->[2]);
 	my $reference = 	trim($fields->[3]); 
 	my $text = 		trim($fields->[6].$fields->[7].$fields->[8]);
-	my @line = ( 
-		$txnDateStr, 
-		$ccy, 
-		$statementCode,
-		$reference, 
-		$debit, 
-		$credit, 
-		$text);
-	DEBUG("Transformed line into array with data: { txnDateStr = '$txnDateStr', ccy = '$ccy', statementCode = '$statementCode', reference = '$reference', debit = '$debit', credit = '$credit', text = '$text' }");
-	return @line;
+	my %line = ( 
+		date => $txnDateStr, 
+		text => "$statementCode - $reference - $text", 
+		debit => $debit, 
+		credit => $credit,
+		currency => $ccy
+	);
+	#my @line = ( 
+	#	$txnDateStr, 
+	#	"$statementCode - $reference - $text",	
+	#	$debit, 
+	#	$credit, 
+	#		$ccy);
+	return %line;
 }
 
 sub traverse_and_construct
@@ -61,8 +67,8 @@ sub traverse_and_construct
 				$reached_csv = 1;
 			} elsif ($reached_csv && length($fields[0]) > 0) { 
 				DEBUG("Parsing line $line");
-				my @elem = line_to_arr(\@fields, $ccy);
-				push @outcsv, \@elem;
+				my %elem = line_to_arr(\@fields, $ccy);
+				push @outcsv, \%elem;
 				#DEBUG("Line parsed into: ".Dumper(@elem));
 			}
 		}

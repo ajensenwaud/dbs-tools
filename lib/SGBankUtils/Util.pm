@@ -33,8 +33,12 @@ sub write_array_to_csv_file
 	DEBUG(Dumper($outcsv));
 	open my $fh, ">:encoding(utf8)", $file_out or usage_and_die($!); # die "Usage:  $!"; 
 	my $csvo  = Text::CSV->new({binary => 1, auto_diag => 1});
-	for my $e (@$outcsv) { 
-		$csvo->say($fh, \@$e);
+	#for my $e (@$outcsv)
+	for (@$outcsv)
+       	{ 
+		my %e = %$_;
+		my @arr = ( $e{'date'}, $e{'text'}, $e{'debit'}, $e{'credit'}, $e{'currency'} );
+		$csvo->say($fh, \@arr); # \@$e);
 	}
 	close $fh or die "new.csv: $!\n".usage();
 }
