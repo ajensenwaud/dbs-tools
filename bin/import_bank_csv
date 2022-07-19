@@ -6,22 +6,15 @@ use Text::CSV;
 use Data::Dumper;
 use Date::Parse;
 use DateTime;
-use Text::CSV::Slurp;
 use lib "lib/";
 use SGBankUtils::Util qw(trim usage usage_and_die write_array_to_csv_file);
 use SGBankUtils::DBS qw(traverse_and_construct);
 use SGBankUtils::HSBC qw(traverse_and_construct);
 use Log::Log4perl qw(:easy);
-use feature "switch";
 
 # Set debugging level. Change to $DEBUG if you need to debug stuff
-# See ttps://metacpan.org/pod/Log::Log4perl for more information
 Log::Log4perl->easy_init( 
-	# Change below to $DEBUG for debug-friendly logging
 	$INFO # $ERROR # , $DEBUG
-	# Change below for outputting to various files instead of STDOUT, STDERR
-	#{ file => "STDERR", level => $DEBUG}, 
-	#{ file => "STDERR", level => $ERROR } 
 );
 
 my $format = $ARGV[0] or die "Need to know the format you are using, e.g, 'dbs', 'hsbc'.\n";
@@ -33,9 +26,9 @@ INFO("Parsing $file...");
 # Work out what format is passed on and give back the appropriate handler 
 # from the modules using a sub routine reference
 my $handler;
-if ($format eq "hsbc") { # Picked HSBC format
+if ($format eq "--hsbc") { # Picked HSBC format
 	$handler = \&SGBankUtils::HSBC::traverse_and_construct; 
-} elsif ($format eq "dbs") {  # Picked DBS format
+} elsif ($format eq "--dbs") {  # Picked DBS format
 	$handler = \&SGBankUtils::DBS::traverse_and_construct;
 } else {  # Format is unknown - die
 	die "Unknown format: $format";
@@ -46,5 +39,3 @@ my $num_output = $#outcsv + 1;
 INFO("Converted into $num_output lines of transaction data.");
 write_array_to_csv_file($file_out, \@outcsv);
 INFO("Wrote $num_output lines of transaction data to $file_out");
-
-1;

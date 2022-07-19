@@ -19,13 +19,13 @@ sub line_to_arr
 		epoch => str2time(trim($fields->[0])." 00:00:00"),
 		time_zone => 'Asia/Singapore'
 	);
-	my $debitAmount = length(trim $fields->[4]) > 0 ? trim($fields->[4]) + 0.0  : 0.0;
-	my $creditAmount = length(trim $fields->[5]) > 0 ? trim($fields->[5]) + 0.0 : 0.0;
+	#my $debitAmount = length(trim $fields->[4]) > 0 ? trim($fields->[4]) + 0.0  : 0.0;
+	#my $creditAmount = length(trim $fields->[5]) > 0 ? trim($fields->[5]) + 0.0 : 0.0;
+	my $debit = $fields->[4] + 0;
+	my $credit = $fields->[5] + 0;
 	my $txnDateStr = $txndate->strftime("%Y-%m-%d");
 	my $statementCode = 	trim($fields->[2]);
 	my $reference = 	trim($fields->[3]); 
-	my $debit = 		$debitAmount,
-	my $credit = 		$creditAmount,
 	my $text = 		trim($fields->[6].$fields->[7].$fields->[8]);
 	my @line = ( 
 		$txnDateStr, 

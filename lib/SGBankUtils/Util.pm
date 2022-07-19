@@ -18,7 +18,7 @@ sub trim
 
 sub usage
 {
-	return "Usage: dbs_import_csv.pl <input CSV file> <output CSV file>\n"
+	return "Usage: dbs_import_csv.pl [--dbs|--hsbc] <input CSV file> <output CSV file>\n"
 }
 
 sub usage_and_die
