@@ -12,6 +12,57 @@ To solve this issue and improve my efficiecny in GnuCash, I set out to answer th
 To prove it, I wrote a Perl-based tool which can transform transaction statement CSV files from various Singaporean banks into something GnuCash can understand.
 Currently, only DBS and HSBC SG are supported. I plan to expand to other banks depending on need.  
 
+## Installation
+First, ensure you have a recent version of Perl installed (I use Perl 5.34, which comes with Ubuntu 22.04 at time of writing). If Perl is not installed, you can install it from packages / ports on your Linux / BSD distribution.
+
+```
+$ perl -v
+
+This is perl 5, version 34, subversion 0 (v5.34.0) built for x86_64-linux-gnu-thread-multi
+(with 50 registered patches, see perl -V for more detail)
+
+Copyright 1987-2021, Larry Wall
+
+Perl may be copied only under the terms of either the Artistic License or the
+GNU General Public License, which may be found in the Perl 5 source kit.
+
+Complete documentation for Perl, including FAQ lists, should be found on
+this system using "man perl" or "perldoc perl".  If you have access to the
+Internet, point your browser at http://www.perl.org/, the Perl Home Page.
+```
+
+Clone the repo: 
+
+```
+$ git clone https://github.com/ajensenwaud/dbs-tools.git
+```
+
+Enter the directory
+
+```
+$ cd dbs-tools
+```
+
+Generate a Makefile for your environment:
+
+```
+perl Makefile.PL
+```
+
+Then installation is as per most Unix systems using Make:
+
+```
+make
+make install
+```
+
+This installs it into your PATH here (YMMV): 
+
+```
+aj@funkyhorse:~/dbs-tools$ which import_bank_csv
+/home/aj/perl5/bin/import_bank_csv
+```
+
 ## Usage
 
 Usage:

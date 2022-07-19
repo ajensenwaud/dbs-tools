@@ -7,7 +7,7 @@ use Data::Dumper;
 use Date::Parse;
 use DateTime;
 use lib "lib/";
-use SGBankUtils::Util qw(trim usage usage_and_die write_array_to_csv_file);
+use SGBankUtils::Util qw(trim usage usage_and_die write_array_to_csv_file version_and_exit);
 use SGBankUtils::DBS qw(traverse_and_construct);
 use SGBankUtils::HSBC qw(traverse_and_construct);
 use Log::Log4perl qw(:easy);
@@ -41,6 +41,10 @@ Log::Log4perl->easy_init(
 );
 
 # Grab command line switches
+if ($ARGV[0] eq "--version" or $ARGV[0] eq '-v') { 
+	version_and_exit();
+}
+
 my ($format, $file_in, $file_out) = @ARGV or usage_and_die("Incorrect set of command line parameters!");
 
 # Run the main program

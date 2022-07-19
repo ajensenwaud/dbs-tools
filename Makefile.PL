@@ -17,7 +17,7 @@ WriteMakefile(
 		'Date::Parse'		=> '0',
 		'DateTime'		=> '0',
 		'Log::Log4perl' 	=> '0',
-		'Test::More'		=> '0'
+		######'Test::More'		=> '0'
 	}
 );
 
