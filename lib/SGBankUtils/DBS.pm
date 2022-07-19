@@ -6,6 +6,7 @@ use Log::Log4perl qw(:easy);
 use Text::CSV;
 use Date::Parse;
 use Data::Dumper;
+use lib "./"; 
 use SGBankUtils::Util qw(trim);
 
 use Exporter qw(import);

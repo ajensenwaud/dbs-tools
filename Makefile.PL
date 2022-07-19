@@ -10,7 +10,7 @@ WriteMakefile(
 	EXE_FILES	=> [
 		'bin/import_bank_csv'
 	],
-	VERSION_FROM 	=> 'lib/SGBankUtils/Util.pm',
+	VERSION_FROM 	=> 'lib/SGBankUtils.pm',
 	PREREQ_PM	=> { 
 		'Text::CSV'		=> '0',
 		'Data::Dumper' 		=> '0',
