@@ -89,3 +89,6 @@ After running the command, you can point gnuCash at ``output.csv`` to import it 
 
 ## Contributions
 I appreciate any kind of contribution. Feel free to open a pull request!
+
+## News
+We hit Hacker News! Follow the discussion here: https://news.ycombinator.com/item?id=32135157
