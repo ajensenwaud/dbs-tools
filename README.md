@@ -20,15 +20,6 @@ $ perl -v
 
 This is perl 5, version 34, subversion 0 (v5.34.0) built for x86_64-linux-gnu-thread-multi
 (with 50 registered patches, see perl -V for more detail)
-
-Copyright 1987-2021, Larry Wall
-
-Perl may be copied only under the terms of either the Artistic License or the
-GNU General Public License, which may be found in the Perl 5 source kit.
-
-Complete documentation for Perl, including FAQ lists, should be found on
-this system using "man perl" or "perldoc perl".  If you have access to the
-Internet, point your browser at http://www.perl.org/, the Perl Home Page.
 ```
 
 Clone the repo: 
@@ -46,20 +37,20 @@ $ cd dbs-tools
 Generate a Makefile for your environment:
 
 ```
-perl Makefile.PL
+$ perl Makefile.PL
 ```
 
 Then installation is as per most Unix systems using Make:
 
 ```
-make
-make install
+$ make
+$ make install
 ```
 
 This installs it into your PATH here (YMMV): 
 
 ```
-aj@funkyhorse:~/dbs-tools$ which import_bank_csv
+$ which import_bank_csv
 /home/aj/perl5/bin/import_bank_csv
 ```
 
@@ -82,7 +73,7 @@ Or HSBC:
 bin/import_bank_csv --hsbc hsbc-input-file.csv output.csv
 ```
 
-After running the command, you can point gnuCash at ``output.csv`` to import it following the usual process.
+After running the command, you can point GnuCash at ``output.csv`` to import it following the usual process.
 
 ## License
 ``dbs-tools`` is licensed under a BSD License. It comes with absolutely no warranty. As with Varnish, If you like the tool, you can buy me a beer.
