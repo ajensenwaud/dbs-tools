@@ -11,7 +11,7 @@ use lib "./";
 use SGBankUtils::Util qw(trim);
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(line_to_arr traverse_and_construct);
+our @EXPORT_OK = qw(traverse_and_construct);
 
 # Convert one line of DBS CSV format to an array
 sub line_to_arr
@@ -38,12 +38,6 @@ sub line_to_arr
 		credit => $credit,
 		currency => $ccy
 	);
-	#my @line = ( 
-	#	$txnDateStr, 
-	#	"$statementCode - $reference - $text",	
-	#	$debit, 
-	#	$credit, 
-	#		$ccy);
 	return %line;
 }
 

@@ -7,7 +7,7 @@ use Data::Dumper;
 use Text::CSV;
 use Log::Log4perl qw(:easy);
 
-our @EXPORT_OK = qw(trim usage usage_and_die write_array_to_csv_file version_and_exit run);
+our @EXPORT_OK = qw(trim_num_or_zero trim usage usage_and_die write_array_to_csv_file version_and_exit run);
 
 sub trim
 {
@@ -25,13 +25,20 @@ sub version_and_exit {
 
 sub usage
 {
-	return "Usage: dbs_import_csv.pl [--dbs|--hsbc] <input CSV file> <output CSV file>\n"
+	return "Usage: dbs_import_csv.pl [--dbs|--hsbc|--stgeorge] <input CSV file> <output CSV file>\n"
 }
 
 sub usage_and_die
 {
 	my $error = shift;
 	die $error."\n".usage();
+}
+
+sub trim_num_or_zero
+{
+	my $str = shift;
+	my $num = length(trim($str)) > 0 ? trim($str) + 0.0 : 0.0;
+	return $num;
 }
 
 sub write_array_to_csv_file

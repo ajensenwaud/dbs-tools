@@ -34,7 +34,7 @@ Internet, point your browser at http://www.perl.org/, the Perl Home Page.
 Clone the repo: 
 
 ```
-$ git clone https://github.com/ajensenwaud/dbs-tools.git
+$ git clone https://github.com/ajensenwaud/dbs-tools.git
 ```
 
 Enter the directory
